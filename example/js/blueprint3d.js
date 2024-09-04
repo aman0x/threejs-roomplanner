@@ -57521,14 +57521,16 @@ return jQuery;
 })));
 
 },{}],3:[function(require,module,exports){
+
+
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
+
 var THREE = require('three');
 
-THREE.LegacyJSONLoader = 
-( function () {
+THREE.LegacyJSONLoader = ( function () {
 
 	function LegacyJSONLoader( manager ) {
 
