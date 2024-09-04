@@ -158,6 +158,9 @@ Item.prototype.clickPressed = function(intersection) {
 
 Item.prototype.clickDragged = function(intersection) {
     if (intersection) {
+
+        console.log(Date.now()," dragging .........");
+        
         this.moveToPosition(
             intersection.point.sub(this.dragOffset), 
             intersection);
@@ -166,6 +169,9 @@ Item.prototype.clickDragged = function(intersection) {
 
 Item.prototype.rotate = function(intersection) {
     if (intersection) {
+
+        console.log(Date.now()," rotating ");
+        
         var angle = utils.angle(
             0, 
             1, 
@@ -272,13 +278,13 @@ Item.prototype.objectHalfSize = function() {
     return objectBox.max.clone().sub( objectBox.min ).divideScalar( 2 );
 }
 
-Item.prototype.createGlow = function( color, opacity, ignoreDepth ) {
+Item.prototype.createGlow = function( color, transparency, ignoreDepth ) {
     ignoreDepth = ignoreDepth || false
-    opacity = opacity || 0.2;
+    transparency = transparency || 0.2;
 	var glowMaterial = new THREE.MeshBasicMaterial ({
 		color: color,
 		blending: THREE.AdditiveBlending,
-		opacity: 0.2,
+		transparency: 0.2,
 		transparent: true,
         depthTest: !ignoreDepth
 	});

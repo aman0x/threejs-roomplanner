@@ -74,15 +74,23 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
   }
 
   function clickDragged(vec2) {
+
     vec2 = vec2 || mouse;
+    
     var intersection = scope.itemIntersection(mouse, selectedObject);
+    console.log(intersection," intersection... ");
+
     if (intersection) {
       if (scope.isRotating()) {
+        console.log(intersection,"intersection...");
+        // console.log(selectedObject.rotate,"selectedObject.rotate");
         selectedObject.rotate(intersection);        
       } else {
+        // console.log(selectedObject.clickDragged,"  console.log(selectedObjec)....");
         selectedObject.clickDragged(intersection);                
       }
     }
+
   }
 
   function itemRemoved(item) {
@@ -157,6 +165,8 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
         case states.DRAGGING:
         case states.ROTATING:
         case states.ROTATING_FREE:
+        console.log("dragging /  rotating4 .....");
+          
           clickDragged();
           hud.update();
           scope.needsUpdate = true;
@@ -338,69 +348,156 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
   }
 
   //
-  function mouseToVec3(vec2) {
-    normVec2 = normalizeVector2(vec2)
-    var vector = new THREE.Vector3(
-      normVec2.x, normVec2.y, 0.5);
-    vector.unproject(camera);
-    return vector;
-  }
+  // function mouseToVec3(vec2) {
+  //   normVec2 = normalizeVector2(vec2)
+  //   var vector = new THREE.Vector3(
+  //     normVec2.x, normVec2.y, 0.5);
+  //   vector.unproject(camera);
+  //   return vector;
+  // }
+
+  // Updated mouseToVec3 function
+// Debugging function to check object properties
+function debugObject(obj) {
+  console.log("Object position:", obj.position);
+  console.log("Object rotation:", obj.rotation);
+  console.log("Object scale:", obj.scale);
+  console.log("Object visible:", obj.visible);
+  console.log("Object geometry:", obj.geometry);
+  console.log("Object material:", obj.material);
+}
+
+// Updated mouseToVec3 function
+function mouseToVec3(vec2) {
+  var normVec2 = normalizeVector2(vec2);
+  return new THREE.Vector2(normVec2.x, normVec2.y);
+}
 
   // returns the first intersection object
   this.itemIntersection = function(vec2, item) {
     var customIntersections = item.customIntersectionPlanes();
+    console.log(item.customIntersectionPlanes," customIntersectionPlanes");
+    console.log(customIntersections,"customIntersections");
+    
+    
+
     var intersections = null;
     if (customIntersections && customIntersections.length > 0) {
+      console.log("here1");
+      
       intersections = this.getIntersections(vec2, customIntersections, true);
     } else {
+      console.log("interscetion start here");
+      // plane.visible = true;
+      debugObject(plane);
+
       intersections = this.getIntersections(vec2, plane);
+
+      console.log("Final intersections:", intersections);
+      
+      
+      
     }
     if (intersections.length > 0) {
+      console.log("here3");
+
         return intersections[0];
     } else {
+      console.log("here4");
+
         return null;
     }
   }
 
   // filter by normals will only return objects facing the camera
   // objects can be an array of objects or a single object
-  this.getIntersections = function(vec2, objects, filterByNormals, onlyVisible, recursive, linePrecision ) {
+  // this.getIntersections = function(vec2, objects, filterByNormals, onlyVisible, recursive, linePrecision ) {
 
+  //   var vector = mouseToVec3(vec2);
+
+  //   onlyVisible = onlyVisible || false;
+  //   filterByNormals = filterByNormals || false;
+  //   recursive = recursive || false;
+  //   linePrecision = linePrecision || 20;
+
+
+  //   var direction = vector.sub( camera.position ).normalize();
+  //   var raycaster = new THREE.Raycaster(
+  //       camera.position,
+  //       direction);
+  //   raycaster.linePrecision = linePrecision;
+  //   var intersections;
+  //   if (objects instanceof Array){
+  //     intersections = raycaster.intersectObjects(objects, recursive);
+  //   } else {
+  //     intersections = raycaster.intersectObject(objects, recursive);
+  //   }
+  //   // filter by visible, if true
+  //   if (onlyVisible) {
+  //     intersections = utils.removeIf(intersections, function(intersection) {
+  //       return !intersection.object.visible;
+  //     });
+  //   }
+
+  //   // filter by normals, if true
+  //   if (filterByNormals) {
+  //     intersections = utils.removeIf(intersections, function(intersection) {
+  //       var dot = intersection.face.normal.dot(direction);
+  //       return (dot > 0)
+  //     });
+  //   } 
+  //   return intersections;
+  // }
+
+  this.getIntersections = function(vec2, objects, filterByNormals, onlyVisible, recursive, linePrecision) {
     var vector = mouseToVec3(vec2);
-
+    
     onlyVisible = onlyVisible || false;
     filterByNormals = filterByNormals || false;
     recursive = recursive || false;
     linePrecision = linePrecision || 20;
-
-
-    var direction = vector.sub( camera.position ).normalize();
-    var raycaster = new THREE.Raycaster(
-        camera.position,
-        direction);
+  
+    var raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(vector, camera);
     raycaster.linePrecision = linePrecision;
+    
     var intersections;
-    if (objects instanceof Array){
-      intersections = raycaster.intersectObjects(objects, recursive);
+    if (Array.isArray(objects)) {
+      // For array of objects
+      var visibleObjects = objects.map(obj => {
+        obj.visible = true;
+        return obj;
+      });
+      intersections = raycaster.intersectObjects(visibleObjects, recursive);
+      // Restore original visibility
+      objects.forEach((obj, index) => {
+        obj.visible = visibleObjects[index].visible;
+      });
     } else {
+      // For single object
+      var originalVisibility = objects.visible;
+      objects.visible = true;
       intersections = raycaster.intersectObject(objects, recursive);
+      objects.visible = originalVisibility;
     }
-    // filter by visible, if true
+  
+    // filter by visible, if true (this is now handled before raycasting)
     if (onlyVisible) {
       intersections = utils.removeIf(intersections, function(intersection) {
         return !intersection.object.visible;
       });
     }
-
+  
     // filter by normals, if true
     if (filterByNormals) {
       intersections = utils.removeIf(intersections, function(intersection) {
-        var dot = intersection.face.normal.dot(direction);
-        return (dot > 0)
+        var dot = intersection.face.normal.dot(raycaster.ray.direction);
+        return (dot > 0);
       });
-    } 
+    }
+    
     return intersections;
-  }
+  }  
 
   // manage the selected object
   this.setSelectedObject = function( object ) {

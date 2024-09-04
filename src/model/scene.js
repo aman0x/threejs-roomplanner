@@ -15,15 +15,15 @@ var WallItem = require('../items/wall_item');
 var utils = require('../utils/utils');
 
 // Import LegacyJSONLoader from the Three.js examples
-require('three/examples/js/loaders/deprecated/LegacyJSONLoader');
+// require('three/examples/js/loaders/deprecated/LegacyJSONLoader');
 
 // Accessing the LegacyJSONLoader from the global THREE object
-var LegacyJSONLoader = THREE.LegacyJSONLoader;
-if (!LegacyJSONLoader) {
-  console.error('LegacyJSONLoader is not available in the current Three.js setup.');
-} else {
-  console.log('LegacyJSONLoader is successfully loaded:', LegacyJSONLoader);
-}
+// var LegacyJSONLoader = THREE.LegacyJSONLoader;
+// if (!LegacyJSONLoader) {
+//   console.error('LegacyJSONLoader is not available in the current Three.js setup.');
+// } else {
+//   console.log('LegacyJSONLoader is successfully loaded:', LegacyJSONLoader);
+// }
 
 
 var Scene = function(model, textureDir) {
@@ -37,7 +37,7 @@ var Scene = function(model, textureDir) {
   this.needsUpdate = false;
 
   // Initialize item loader using LegacyJSONLoader
-  var loader = new LegacyJSONLoader();
+  var loader = new THREE.JSONLoader();
   loader.crossOrigin = "";
 
   var item_types = {

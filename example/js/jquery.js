@@ -6298,11 +6298,11 @@ function addGetHookIf( conditionFn, hookFn ) {
 		return;
 	}
 
-	style.cssText = "float:left;opacity:.5";
+	style.cssText = "float:left;transparency:.5";
 
 	// Support: IE<9
-	// Make sure that element opacity exists (as opposed to filter)
-	support.opacity = style.opacity === "0.5";
+	// Make sure that element transparency exists (as opposed to filter)
+	support.transparency = style.transparency === "0.5";
 
 	// Verify style float existence
 	// (IE uses styleFloat instead of cssFloat)
@@ -6450,7 +6450,7 @@ jQuery.swap = function( elem, options, callback, args ) {
 
 var
 		ralpha = /alpha\([^)]*\)/i,
-	ropacity = /opacity\s*=\s*([^)]*)/,
+	rtransparency = /transparency\s*=\s*([^)]*)/,
 
 	// swappable if display is none or starts with table except "table", "table-cell", or "table-caption"
 	// see here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
@@ -6635,11 +6635,11 @@ jQuery.extend({
 	// Add in style property hooks for overriding the default
 	// behavior of getting and setting a style property
 	cssHooks: {
-		opacity: {
+		transparency: {
 			get: function( elem, computed ) {
 				if ( computed ) {
-					// We should always get a number back from opacity
-					var ret = curCSS( elem, "opacity" );
+					// We should always get a number back from transparency
+					var ret = curCSS( elem, "transparency" );
 					return ret === "" ? "1" : ret;
 				}
 			}
@@ -6649,12 +6649,12 @@ jQuery.extend({
 	// Don't automatically add "px" to these possibly-unitless properties
 	cssNumber: {
 		"columnCount": true,
-		"fillOpacity": true,
+		"filltransparency": true,
 		"flexGrow": true,
 		"flexShrink": true,
 		"fontWeight": true,
 		"lineHeight": true,
-		"opacity": true,
+		"transparency": true,
 		"order": true,
 		"orphans": true,
 		"widows": true,
@@ -6799,11 +6799,11 @@ jQuery.each([ "height", "width" ], function( i, name ) {
 	};
 });
 
-if ( !support.opacity ) {
-	jQuery.cssHooks.opacity = {
+if ( !support.transparency ) {
+	jQuery.cssHooks.transparency = {
 		get: function( elem, computed ) {
-			// IE uses filters for opacity
-			return ropacity.test( (computed && elem.currentStyle ? elem.currentStyle.filter : elem.style.filter) || "" ) ?
+			// IE uses filters for transparency
+			return rtransparency.test( (computed && elem.currentStyle ? elem.currentStyle.filter : elem.style.filter) || "" ) ?
 				( 0.01 * parseFloat( RegExp.$1 ) ) + "" :
 				computed ? "1" : "";
 		},
@@ -6811,15 +6811,15 @@ if ( !support.opacity ) {
 		set: function( elem, value ) {
 			var style = elem.style,
 				currentStyle = elem.currentStyle,
-				opacity = jQuery.isNumeric( value ) ? "alpha(opacity=" + value * 100 + ")" : "",
+				transparency = jQuery.isNumeric( value ) ? "alpha(transparency=" + value * 100 + ")" : "",
 				filter = currentStyle && currentStyle.filter || style.filter || "";
 
-			// IE has trouble with opacity if it does not have layout
+			// IE has trouble with transparency if it does not have layout
 			// Force it by setting the zoom level
 			style.zoom = 1;
 
-			// if setting opacity to 1, and no other filters exist - attempt to remove filter attribute #6652
-			// if value === "", then remove inline opacity #12685
+			// if setting transparency to 1, and no other filters exist - attempt to remove filter attribute #6652
+			// if value === "", then remove inline transparency #12685
 			if ( ( value >= 1 || value === "" ) &&
 					jQuery.trim( filter.replace( ralpha, "" ) ) === "" &&
 					style.removeAttribute ) {
@@ -6829,7 +6829,7 @@ if ( !support.opacity ) {
 				// style.removeAttribute is IE Only, but so apparently is this code path...
 				style.removeAttribute( "filter" );
 
-				// if there is no filter style applied in a css rule or unset inline opacity, we are done
+				// if there is no filter style applied in a css rule or unset inline transparency, we are done
 				if ( value === "" || currentStyle && !currentStyle.filter ) {
 					return;
 				}
@@ -6837,8 +6837,8 @@ if ( !support.opacity ) {
 
 			// otherwise, set new filter values
 			style.filter = ralpha.test( filter ) ?
-				filter.replace( ralpha, opacity ) :
-				filter + " " + opacity;
+				filter.replace( ralpha, transparency ) :
+				filter + " " + transparency;
 		}
 	};
 }
@@ -7118,7 +7118,7 @@ function genFx( type, includeWidth ) {
 	}
 
 	if ( includeWidth ) {
-		attrs.opacity = attrs.width = type;
+		attrs.transparency = attrs.width = type;
 	}
 
 	return attrs;
@@ -7485,11 +7485,11 @@ jQuery.speed = function( speed, easing, fn ) {
 jQuery.fn.extend({
 	fadeTo: function( speed, to, easing, callback ) {
 
-		// show any hidden elements after setting opacity to 0
-		return this.filter( isHidden ).css( "opacity", 0 ).show()
+		// show any hidden elements after setting transparency to 0
+		return this.filter( isHidden ).css( "transparency", 0 ).show()
 
 			// animate to the value specified
-			.end().animate({ opacity: to }, speed, easing, callback );
+			.end().animate({ transparency: to }, speed, easing, callback );
 	},
 	animate: function( prop, speed, easing, callback ) {
 		var empty = jQuery.isEmptyObject( prop ),
@@ -7616,9 +7616,9 @@ jQuery.each({
 	slideDown: genFx("show"),
 	slideUp: genFx("hide"),
 	slideToggle: genFx("toggle"),
-	fadeIn: { opacity: "show" },
-	fadeOut: { opacity: "hide" },
-	fadeToggle: { opacity: "toggle" }
+	fadeIn: { transparency: "show" },
+	fadeOut: { transparency: "hide" },
+	fadeToggle: { transparency: "toggle" }
 }, function( name, props ) {
 	jQuery.fn[ name ] = function( speed, easing, callback ) {
 		return this.animate( props, speed, easing, callback );

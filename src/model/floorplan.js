@@ -141,6 +141,7 @@ var Floorplan = function() {
   // import and export -- cleanup
 
   this.saveFloorplan = function() {
+ 
     var floorplan = {
       corners: {},
       walls: [],
@@ -162,6 +163,8 @@ var Floorplan = function() {
       });
     });
     floorplan.newFloorTextures = this.floorTextures;
+    console.log(floorplan," floorplan data");
+    
     return floorplan;
   }
 
