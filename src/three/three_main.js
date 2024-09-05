@@ -8,9 +8,10 @@ var ThreeSkybox = require('./three_skybox');
 var ThreeControls = require('./three_controls');
 //var ThreeCanvas = require('./three_canvas')
 var ThreeHUD = require('./three_hud.js')
-
+window.THREE = THREE;
 var ThreeMain = function(model, element, canvasElement, opts) {
   var scope = this;
+  
 
   var options = {
     resize: true,
@@ -267,3 +268,5 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 }
 
 module.exports = ThreeMain;
+
+

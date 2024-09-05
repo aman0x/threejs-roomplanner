@@ -353,6 +353,7 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
     if (customIntersections && customIntersections.length > 0) {
       intersections = this.getIntersections(vec2, customIntersections, true);
     } else {
+      plane.visible = true;
       intersections = this.getIntersections(vec2, plane);
     }
     if (intersections.length > 0) {

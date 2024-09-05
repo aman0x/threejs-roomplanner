@@ -1,9 +1,6 @@
 var THREE = require('three');
 var JQUERY = require('jquery');
 
-
-
-
 var FloorItem = require('../items/floor_item');
 var InWallFloorItem = require('../items/in_wall_floor_item');
 var InWallItem = require('../items/in_wall_item');
@@ -31,6 +28,9 @@ var Scene = function(model, textureDir) {
   var model = model;
   var textureDir = textureDir;
 
+  console.log(textureDir,": textureDir");
+  
+
   var scene = new THREE.Scene();
   var items = [];
 
@@ -38,6 +38,7 @@ var Scene = function(model, textureDir) {
 
   // Initialize item loader using LegacyJSONLoader
   var loader = new LegacyJSONLoader();
+  // var loader = new THREE.JSONLoader();
   loader.crossOrigin = "";
 
   var item_types = {
@@ -97,6 +98,9 @@ var Scene = function(model, textureDir) {
   };
 
   this.addItem = function(itemType, fileName, metadata, position, rotation, scale, fixed) {
+
+    console.log(fileName,": fileName ");
+    
     itemType = itemType || 1;
 
     var loaderCallback = function(geometry, materials) {

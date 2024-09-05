@@ -122,14 +122,31 @@ Item.prototype.removed = function() {
 }
 
 // on is a bool
+// Item.prototype.updateHighlight = function() {
+//     var on = this.hover || this.selected;
+//     this.highlighted = on;
+//     var hex = on ? this.emissiveColor : 0x000000;
+//     utils.forEach(this.material.materials, function(material) {
+//         material.emissive.setHex(hex);
+//     });
+// }
+
 Item.prototype.updateHighlight = function() {
     var on = this.hover || this.selected;
     this.highlighted = on;
     var hex = on ? this.emissiveColor : 0x000000;
-    utils.forEach(this.material.materials, function(material) {
-        material.emissive.setHex(hex);
+
+    // Check if this.material is an array or single material
+    var materials = Array.isArray(this.material) ? this.material : [this.material];
+
+    // Iterate through each material and set the emissive color
+    utils.forEach(materials, function(material) {
+        if (material.emissive) { // Ensure the material has an emissive property
+            material.emissive.setHex(hex);
+        }
     });
-}
+};
+
 
 Item.prototype.mouseOver = function() {
     this.hover = true;
